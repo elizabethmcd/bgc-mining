@@ -30,7 +30,7 @@ bgc_metadata <- left_join(bgc_info, stb_tsv, by = "scaffold_id")  %>%
     filter(!str_starts(bgc_id, "BGC"))  %>% 
     select(mag_id, bgc_id, product, bgc_class)  %>% 
     left_join(genome_metadata)  %>% 
-    select(mag_id, bgc_id, product, bgc_class, substrate_category, species, group)
+    select(mag_id, bgc_id, product, bgc_class, substrate_category, species, phylo_group)
 
 bgc_substrate_type_counts <- bgc_metadata  %>% 
     group_by(substrate_category, bgc_class)  %>% 
@@ -38,7 +38,7 @@ bgc_substrate_type_counts <- bgc_metadata  %>%
     arrange(desc(n))
 
 bgc_phylo_group_type_counts <- bgc_metadata  %>% 
-    group_by(group, bgc_class)  %>% 
+    group_by(phylo_group, bgc_class)  %>% 
     count()  %>% 
     arrange(desc(n))
 
