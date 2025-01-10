@@ -1,6 +1,6 @@
 # Prologue
 # DO NOT CHANGE
-from 812206152185.dkr.ecr.us-west-2.amazonaws.com/latch-base:cb01-main
+from 812206152185.dkr.ecr.us-west-2.amazonaws.com/latch-base-nextflow:v2.3.4
 
 workdir /tmp/docker-build/work/
 
