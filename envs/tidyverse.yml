@@ -3,5 +3,5 @@ channels:
   - bioconda
   - defaults
 dependencies:
-  - r=4.4.1
+  - r=4.4
   - r-tidyverse=2.0.0
