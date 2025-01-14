@@ -41,7 +41,7 @@ def initialize() -> str:
         headers=headers,
         json={
             "storage_expiration_hours": 0,
-            "version": 1,
+            "version": 2,
         },
     )
     resp.raise_for_status()

@@ -107,6 +107,8 @@ process pyrodigal {
     pyrodigal \\
         -i ${fasta} \\
         -f "gbk" \\
+        --min-gene 10 \\
+        --min-edge-gene 10 \\
         -o "${genome_name}.gbk" \\
         -d ${genome_name}.fna \\
         -a ${genome_name}.faa
@@ -142,6 +144,25 @@ process antismash {
         --genefinding-tool none \\
         ${gbk_file}
     """
+}
+
+process extract_ripp_seqs {
+    tag "extract_ripp_seqs"
+    publishDir "${params.outdir}/ripp_seqs", mode: 'copy'
+
+    memory = "10 GB"
+    cpus = 1
+
+    container "quay.io/biocontainers/mulled-v2-949aaaddebd054dc6bded102520daff6f0f93ce6:aa2a3707bfa0550fee316844baba7752eaab7802-0"
+    conda "envs/biopython.yml"
+
+    input: 
+    path(gbk_files)
+
+    output:
+
+    script:
+
 }
 
 process run_bigscape {
