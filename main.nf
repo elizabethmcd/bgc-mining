@@ -170,7 +170,7 @@ process extract_gbks {
 
     script:
     """
-    python ${baseDir}/bin/extract_antismash_gbks.py ${gbk_file.join(' ')} ${bgc_summary_tsv} ${bgc_peptide_tsv} ${bgc_peptide_fasta}
+    python ${baseDir}/bin/extract_antismash_gbks.py ${gbk_file.join(' ')} antismash_summary.tsv antismash_peptides.tsv antismash_peptides.fasta
     """
 
 }
