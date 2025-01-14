@@ -50,7 +50,7 @@ workflow {
     // antismash predictions
     antismash_input_ch = predicted_orfs.combine(antismash_db_ch)
     antismash(antismash_input_ch)
-    antismash_gbk_files = antismash.out.gbk_results
+    antismash_gbk_files = antismash.out.gbk_results.collect()
 
     // extract bgc info and lanthipeptide seqs from antismash gbk files
     extract_gbks(antismash_gbk_files)
@@ -124,7 +124,7 @@ process antismash {
     publishDir "${params.outdir}/antismash", mode: 'copy'
 
     memory = "20 GB"
-    cpus = 4
+    cpus = 6
 
     container "public.ecr.aws/biocontainers/antismash-lite:7.1.0--pyhdfd78af_0"
     conda "envs/antismashlite.yml"
@@ -152,7 +152,7 @@ process antismash {
 
 process extract_gbks {
     tag "extract_gbks"
-    publishDir "${params.outdir}/ripp_seqs", mode: 'copy'
+    publishDir "${params.outdir}/main_results/bgc_info", mode: 'copy'
 
     memory = "10 GB"
     cpus = 1
@@ -161,12 +161,12 @@ process extract_gbks {
     conda "envs/biopython.yml"
 
     input: 
-    tuple val(genome_name),path(gbk_file)
+    tuple val(genome_name), path(gbk_file)
 
     output:
-    path("*_antismash_summary.tsv"), emit: bgc_summary_tsv
-    path("*_antismash_peptides.tsv"), emit: bgc_peptides_tsv, optional: true
-    path("*_antismash_peptides.fasta"), emit: bgc_peptides_fasta, optional: true
+    path("antismash_summary.tsv"), emit: bgc_summary_tsv
+    path("antismash_peptides.tsv"), emit: bgc_peptides_tsv, optional: true
+    path("antismash_peptides.fasta"), emit: bgc_peptides_fasta, optional: true
 
     script:
     """
