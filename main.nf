@@ -112,6 +112,7 @@ process pyrodigal {
         -f "gbk" \\
         --min-gene 10 \\
         --min-edge-gene 10 \\
+        --max-overlap 10 \\
         -o "${genome_name}.gbk" \\
         -d ${genome_name}.fna \\
         -a ${genome_name}.faa
