@@ -161,7 +161,7 @@ process extract_gbks {
     conda "envs/biopython.yml"
 
     input: 
-    path(gbk_files)
+    tuple val(genome_name),path(gbk_file)
 
     output:
     path("*_antismash_summary.tsv"), emit: bgc_summary_tsv
@@ -170,7 +170,7 @@ process extract_gbks {
 
     script:
     """
-    python ${baseDir}/bin/extract_antismash_gbks.py ${gbk_files.join(' ')} ${bgc_summary_tsv} ${bgc_peptide_tsv} ${bgc_peptide_fasta}
+    python ${baseDir}/bin/extract_antismash_gbks.py ${gbk_file.join(' ')} ${bgc_summary_tsv} ${bgc_peptide_tsv} ${bgc_peptide_fasta}
     """
 
 }
