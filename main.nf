@@ -50,13 +50,12 @@ workflow {
     // antismash predictions
     antismash_input_ch = predicted_orfs.combine(antismash_db_ch)
     antismash(antismash_input_ch)
-    antismash_gbk_files = antismash.out.gbk_results.collect()
+    all_antismash_gbk_files = antismash.out.gbk_results.map{ it[1] }.collect()
 
     // extract bgc info and lanthipeptide seqs from antismash gbk files
-    extract_gbks(antismash_gbk_files)
+    extract_gbks(all_antismash_gbk_files)
 
     // bigscape on all antismash gbk_files
-    all_antismash_gbk_files = antismash_gbk_files.map{ it[1] }.collect()
     run_bigscape(all_antismash_gbk_files, pfam_db_ch)
     bigscape_annotations_tsv = run_bigscape.out.bigscape_annotations_tsv
 
@@ -161,7 +160,7 @@ process extract_gbks {
     conda "envs/biopython.yml"
 
     input: 
-    tuple val(genome_name), path(gbk_file)
+    path(gbk_files)
 
     output:
     path("antismash_summary.tsv"), emit: bgc_summary_tsv
@@ -170,7 +169,7 @@ process extract_gbks {
 
     script:
     """
-    python ${baseDir}/bin/extract_antismash_gbks.py ${gbk_file.join(' ')} antismash_summary.tsv antismash_peptides.tsv antismash_peptides.fasta
+    python ${baseDir}/bin/extract_antismash_gbks.py ${gbk_files.join(' ')} antismash_summary.tsv antismash_peptides.tsv antismash_peptides.fasta
     """
 
 }
