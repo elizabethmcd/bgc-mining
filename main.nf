@@ -52,6 +52,9 @@ workflow {
     antismash(antismash_input_ch)
     antismash_gbk_files = antismash.out.gbk_results
 
+    // extract bgc info and lanthipeptide seqs from antismash gbk files
+    extract_gbks(antismash_gbk_files)
+
     // bigscape on all antismash gbk_files
     all_antismash_gbk_files = antismash_gbk_files.map{ it[1] }.collect()
     run_bigscape(all_antismash_gbk_files, pfam_db_ch)
@@ -146,8 +149,8 @@ process antismash {
     """
 }
 
-process extract_ripp_seqs {
-    tag "extract_ripp_seqs"
+process extract_gbks {
+    tag "extract_gbks"
     publishDir "${params.outdir}/ripp_seqs", mode: 'copy'
 
     memory = "10 GB"
@@ -160,8 +163,14 @@ process extract_ripp_seqs {
     path(gbk_files)
 
     output:
+    path("*_antismash_summary.tsv"), emit: bgc_summary_tsv
+    path("*_antismash_peptides.tsv"), emit: bgc_peptides_tsv, optional: true
+    path("*_antismash_peptides.fasta"), emit: bgc_peptides_fasta, optional: true
 
     script:
+    """
+    python ${baseDir}/bin/extract_antismash_gbks.py ${gbk_files.join(' ')} ${bgc_summary_tsv} ${bgc_peptide_tsv} ${bgc_peptide_fasta}
+    """
 
 }
 
